@@ -27,9 +27,9 @@ export default function CookieBanner() {
 
   if (!showBanner) return null
 
+  // Margen inferior para que los botones queden por encima de la etiqueta "Powered by Netlify"
+  // (plan gratuito, abajo a la derecha) y de los botones flotantes
   return (
-    {/* Margen inferior para que los botones queden por encima de la etiqueta "Powered by Netlify"
-        (plan gratuito, abajo a la derecha) y de los botones flotantes */}
     <div
       className="fixed bottom-0 left-0 right-0 z-[2147483000] px-3 pt-3 pb-[calc(4.5rem+env(safe-area-inset-bottom))] sm:px-4 sm:pt-4 animate-slide-up"
       role="region"
