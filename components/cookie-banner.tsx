@@ -27,8 +27,14 @@ export default function CookieBanner() {
 
   if (!showBanner) return null
 
+  // Margen inferior para que los botones queden por encima de la etiqueta "Powered by Netlify"
+  // (plan gratuito, abajo a la derecha) y de los botones flotantes
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 p-3 sm:p-4 animate-slide-up" role="region" aria-label="Aviso de cookies">
+    <div
+      className="fixed bottom-0 left-0 right-0 z-[2147483000] px-3 pt-3 pb-[calc(4.5rem+env(safe-area-inset-bottom))] sm:px-4 sm:pt-4 animate-slide-up"
+      role="region"
+      aria-label="Aviso de cookies"
+    >
       <Card className="max-w-4xl mx-auto border-2 border-black/[0.08] shadow-2xl">
         <CardContent className="p-4 sm:p-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">

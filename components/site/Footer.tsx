@@ -7,7 +7,7 @@ import { contactInfo } from "@/lib/contact-info"
 
 export default function Footer({ year }: { year: number }) {
   return (
-    <footer id="site-footer" className="bg-black py-12 text-white sm:py-16 lg:py-20">
+    <footer id="site-footer" className="bg-black pt-12 pb-24 text-white sm:pt-16 lg:pt-20 lg:pb-28">
       <div className="mx-auto max-w-page px-4 sm:px-6 lg:px-10">
         <div className="mb-12 grid gap-8 sm:grid-cols-2 md:grid-cols-4 sm:gap-10 lg:gap-12">
           <div className="sm:col-span-2">

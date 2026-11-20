@@ -36,7 +36,7 @@ export default function SellerStickyBar() {
   return (
     <div
       aria-hidden={hidden}
-      className={`fixed inset-x-0 bottom-0 z-40 border-t border-black/[0.08] bg-white/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-10px_30px_rgba(0,0,0,0.08)] backdrop-blur transition-transform duration-300 md:hidden ${
+      className={`fixed inset-x-0 bottom-0 z-40 border-t border-black/[0.08] bg-white/95 p-3 pb-[calc(3.75rem+env(safe-area-inset-bottom))] shadow-[0_-10px_30px_rgba(0,0,0,0.08)] backdrop-blur transition-transform duration-300 md:hidden ${
         hidden ? "pointer-events-none translate-y-full" : "translate-y-0"
       }`}
     >
