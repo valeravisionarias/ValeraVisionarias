@@ -7,8 +7,7 @@ import Link from "next/link"
 import { contactInfo } from "@/lib/contact-info"
 import { getSellerWhatsAppMessage, isValidSellerContact, submitSellerLead, trackSellerEvent } from "@/lib/seller-leads"
 
-// `source` indica en el email desde qué página llega la solicitud
-export default function ContactForm({ source = "contact-form" }: { source?: string } = {}) {
+export default function ContactForm() {
   const [step, setStep] = useState<1 | 2>(1)
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle")
   const [contactValue, setContactValue] = useState("")
@@ -50,7 +49,7 @@ export default function ContactForm({ source = "contact-form" }: { source?: stri
         timeline: formData.get("timeline") as string,
         reason: formData.get("reason") as string,
         message: formData.get("message") as string,
-        source,
+        source: "contact-form",
       }
 
       const result = await submitSellerLead(payload)
@@ -59,7 +58,7 @@ export default function ContactForm({ source = "contact-form" }: { source?: stri
       trackSellerEvent("lead_form_submit", {
         source: payload.source,
         property_type: payload.tipo,
-        form_name: source,
+        form_name: "contact-form",
       })
 
       setStatus("success")
