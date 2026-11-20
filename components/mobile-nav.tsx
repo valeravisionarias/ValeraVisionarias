@@ -22,7 +22,6 @@ const navItems = [
 const calculatorItems = [
   { href: "/simulador-hipoteca", label: "Hipoteca" },
   { href: "/calculadora-rentabilidad", label: "Rentabilidad" },
-  { href: "/calculadora-inversion", label: "Inversión" },
 ]
 
 export default function MobileNav() {
