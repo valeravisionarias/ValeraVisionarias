@@ -11,7 +11,7 @@ Web de **Valera Visionarias**, inmobiliaria de San Vicente del Raspeig (Alicante
 
 ## Cómo se publica (importante)
 
-- El repositorio está en GitHub (`mgl120-ua/ValeraVisionarias`) y **Vercel publica automáticamente la rama `main` en producción**. Todo lo que llega a `main` está en la web real en un par de minutos.
+- El repositorio está en GitHub (copia propia de la responsable, creada a partir de `mgl120-ua/ValeraVisionarias`) y **Vercel publica automáticamente la rama `main` en producción**. Trabaja siempre en su copia; no abras PRs contra el repositorio original. Todo lo que llega a `main` está en la web real en un par de minutos.
 - **Nunca hagas commit ni push directo a `main`.** Trabaja en una rama nueva, abre un Pull Request y deja que la responsable lo revise.
 - Cada Pull Request genera en Vercel una **vista previa** con su propia URL. Dásela a la responsable para que compruebe el cambio antes de fusionar.
 - Fusionar (merge) el PR = publicar. Hazlo solo cuando ella lo diga expresamente.
@@ -21,7 +21,7 @@ Web de **Valera Visionarias**, inmobiliaria de San Vicente del Raspeig (Alicante
 
 - **Next.js 14** (App Router) + React 18 + TypeScript.
 - **Tailwind CSS 3** + componentes **shadcn/ui** (Radix) en `components/ui/`. Iconos: `lucide-react`. Animaciones: `framer-motion` (sutiles).
-- **Supabase**: base de datos de inmuebles (tablas `properties` y `property_images`) y almacenamiento de fotos.
+- **Supabase**: base de datos de inmuebles (tablas `properties` y `property_images`) y almacenamiento de fotos (bucket público `properties`). Para crear las tablas en un proyecto nuevo, usa `supabase/schema.sql` (tablas, políticas RLS y bucket), deducido de las consultas en `app/api/admin/` y `app/propiedad*/`.
 - **Resend**: envío por email de los formularios (contacto, valoración, visita, captadores) a la bandeja de la inmobiliaria.
 - **Google Places API (New)**: valoración y reseñas de Google en la portada (`lib/google-reviews.ts`).
 - Alojamiento: **Vercel** (+ `@vercel/analytics`).
