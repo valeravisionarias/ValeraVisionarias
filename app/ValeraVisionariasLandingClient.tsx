@@ -135,16 +135,15 @@ export default function ValeraVisionariasLandingClient({
                     Calculadoras para decidir con datos
                   </h3>
                   <p className="mt-4 max-w-md text-base leading-[1.49] text-stone-600">
-                    Calcula tu hipoteca, estima la rentabilidad de un alquiler o simula una inversión. Resultados
-                    orientativos para comparar escenarios.
+                    Calcula tu hipoteca y el ahorro que necesitas, o estima la rentabilidad de un piso en alquiler.
+                    Resultados orientativos para comparar escenarios.
                   </p>
                 </div>
 
-                <ul className="grid gap-3 sm:grid-cols-3">
+                <ul className="grid gap-3 sm:grid-cols-2">
                   {[
-                    { href: "/simulador-hipoteca", title: "Hipoteca", text: "Cuota mensual e intereses" },
+                    { href: "/simulador-hipoteca", title: "Hipoteca", text: "Cuota y ahorro que necesitas" },
                     { href: "/calculadora-rentabilidad", title: "Rentabilidad", text: "Alquiler bruto y neto" },
-                    { href: "/calculadora-inversion", title: "Inversión", text: "Crecimiento a largo plazo" },
                   ].map((tool) => (
                     <li key={tool.href}>
                       <Link

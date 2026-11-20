@@ -6,14 +6,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { Info, Calculator, Percent, Euro, Home, Calendar } from "lucide-react"
+import Link from "next/link"
+import { Info, Calculator, Percent, Euro, Home, Calendar, Receipt } from "lucide-react"
 
 function eur(n: number) {
   return n.toLocaleString("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 2 })
-}
-function pct(n: number) {
-  return `${n.toFixed(2)}%`
 }
 
 export default function SimuladorHipotecaPage() {
@@ -22,27 +19,24 @@ export default function SimuladorHipotecaPage() {
   const [entrada, setEntrada] = useState(20) // %
   const [plazo, setPlazo] = useState(30) // años
   const [tin, setTin] = useState(3.25) // % TIN anual
-  const [tipo, setTipo] = useState<"fija" | "variable">("fija")
+  // Impuestos y gastos de compra (% del precio). Segunda mano en la Comunitat Valenciana:
+  // ITP general del 9 % + notaría, registro y gestoría (aprox. 1,5 %).
+  const [gastosPct, setGastosPct] = useState(10.5)
   const [mostrarTabla, setMostrarTabla] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
 
   const principal = useMemo(() => {
     const p = precio * (1 - entrada / 100)
     return Math.max(0, Math.round(p))
   }, [precio, entrada])
 
-  const { cuota, interesesTotales, totalAPagar, ltv, taeAprox, schedule } = useMemo(() => {
+  const { cuota, interesesTotales, totalAPagar, schedule } = useMemo(() => {
     const n = plazo * 12
     const r = (tin / 100) / 12 // interés mensual
-    const ltv = (principal / precio) * 100 || 0
 
     // Fórmula de amortización francesa
     const cuota = n > 0 && r > 0
       ? principal * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1)
       : (n > 0 ? principal / n : 0)
-
-    // TAE aproximada añadiendo 0.1–0.3% de gastos recurrentes (muy simplificado)
-    const taeAprox = tin + 0.2
 
     // Generar tabla de amortización (opcional)
     const schedule: Array<{ mes: number; cuota: number; interes: number; amortizacion: number; pendiente: number }> = []
@@ -58,14 +52,15 @@ export default function SimuladorHipotecaPage() {
     const interesesTotales = Math.max(0, schedule.reduce((acc, x) => acc + x.interes, 0))
     const totalAPagar = principal + interesesTotales
 
-    return { cuota, interesesTotales, totalAPagar, ltv, taeAprox, schedule }
-  }, [plazo, tin, principal, precio])
+    return { cuota, interesesTotales, totalAPagar, schedule }
+  }, [plazo, tin, principal])
 
-  function onSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setSubmitted(true)
-    // Aquí podrías enviar evento de analytics si quieres
-  }
+  // Lo que el comprador tiene que poner de su bolsillo: entrada + impuestos y gastos
+  const entradaEur = (precio * entrada) / 100
+  const gastosCompra = (precio * gastosPct) / 100
+  const ahorroNecesario = entradaEur + gastosCompra
+  // Orientación habitual de los bancos: que la cuota no supere ~35 % de los ingresos netos
+  const ingresosRecomendados = cuota > 0 ? cuota / 0.35 : 0
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
@@ -77,7 +72,7 @@ export default function SimuladorHipotecaPage() {
           Calcula tu cuota mensual
         </h1>
         <p className="text-muted-foreground mt-3 text-base md:text-lg">
-          Conoce tu cuota, el LTV y una TAE aproximada según tus condiciones.
+          Calcula la cuota mensual y, sobre todo, cuánto dinero necesitas tener ahorrado para comprar.
         </p>
       </section>
 
@@ -85,7 +80,7 @@ export default function SimuladorHipotecaPage() {
         {/* Panel de entrada */}
         <Card className="md:col-span-2">
           <CardContent className="space-y-5 p-6">
-            <form onSubmit={onSubmit} className="space-y-6">
+            <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="precio" className="flex items-center gap-2">
                   <Home className="h-4 w-4" /> Precio de la vivienda
@@ -191,22 +186,28 @@ export default function SimuladorHipotecaPage() {
                 </div>
               </div>
 
-              <Tabs value={tipo} onValueChange={(v) => setTipo(v as any)} className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="fija">Fija</TabsTrigger>
-                  <TabsTrigger value="variable">Variable</TabsTrigger>
-                </TabsList>
-                <TabsContent value="fija" />
-                <TabsContent value="variable">
-                  <p className="text-xs text-muted-foreground mt-2">
-                    Para hipoteca variable se usa el TIN actual como tipo medio. El resultado es orientativo.
-                  </p>
-                </TabsContent>
-              </Tabs>
-
-              <Button type="submit" className="w-full h-11 text-base">
-                Calcular ahora
-              </Button>
+              <div className="space-y-2">
+                <Label htmlFor="gastos" className="flex items-center gap-2">
+                  <Receipt className="h-4 w-4" /> Impuestos y gastos de compra (%)
+                </Label>
+                <div className="flex items-center gap-3">
+                  <Input
+                    id="gastos"
+                    inputMode="decimal"
+                    value={gastosPct}
+                    onChange={(e) => {
+                      const v = Number(e.target.value.replace(",", ".")) || 0
+                      setGastosPct(Math.min(20, Math.max(0, v)))
+                    }}
+                  />
+                  <span className="text-sm text-muted-foreground whitespace-nowrap">({eur(gastosCompra)})</span>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Vivienda de segunda mano en la Comunitat Valenciana: impuesto (ITP) del 9 % con carácter general, más
+                  notaría, registro y gestoría (en torno al 1,5 %). Hay tipos reducidos para algunos compradores, como
+                  jóvenes o familias numerosas. En obra nueva se paga IVA en lugar de ITP.
+                </p>
+              </div>
             </form>
           </CardContent>
         </Card>
@@ -226,10 +227,10 @@ export default function SimuladorHipotecaPage() {
                   <p className="mt-1 text-2xl font-semibold">{eur(principal)}</p>
                   <p className="text-xs text-muted-foreground">Entrada: {eur((precio * entrada) / 100)}</p>
                 </div>
-                <div className="rounded-xl border p-4">
-                  <p className="text-sm text-muted-foreground">LTV</p>
-                  <p className="mt-1 text-2xl font-semibold">{pct(ltv || 0)}</p>
-                  <p className="text-xs text-muted-foreground">Objetivo habitual: ≤ 80%</p>
+                <div className="rounded-xl border border-black/20 bg-stone-50 p-4">
+                  <p className="text-sm text-muted-foreground">Ahorro que necesitas</p>
+                  <p className="mt-1 text-2xl font-semibold">{eur(ahorroNecesario)}</p>
+                  <p className="text-xs text-muted-foreground">Entrada + impuestos y gastos</p>
                 </div>
               </div>
 
@@ -243,26 +244,24 @@ export default function SimuladorHipotecaPage() {
                   <p className="mt-1 text-xl font-semibold">{eur(totalAPagar)}</p>
                 </div>
                 <div className="rounded-xl border p-4">
-                  <p className="text-sm text-muted-foreground">TAE aprox.</p>
-                  <p className="mt-1 text-xl font-semibold">{pct(taeAprox)}</p>
-                  <p className="text-xs text-muted-foreground">Orientativa, sin comisiones</p>
+                  <p className="text-sm text-muted-foreground">Ingresos recomendados</p>
+                  <p className="mt-1 text-xl font-semibold">{eur(ingresosRecomendados)}</p>
+                  <p className="text-xs text-muted-foreground">netos al mes, para que la cuota no pase del 35 %</p>
                 </div>
               </div>
 
-              {submitted && (
-                <p className="mt-4 flex items-start gap-2 text-xs text-muted-foreground">
-                  <Info className="mt-[2px] h-4 w-4 shrink-0" />
-                  Resultado orientativo. No constituye oferta vinculante. Pueden aplicar comisiones, seguros y requisitos
-                  del banco. Consúltanos y te ayudamos a conseguir la mejor financiación.
-                </p>
-              )}
+              <p className="mt-4 flex items-start gap-2 text-xs text-muted-foreground">
+                <Info className="mt-[2px] h-4 w-4 shrink-0" />
+                Resultado orientativo, no es una oferta de ningún banco. Las condiciones reales (interés, comisiones,
+                seguros y porcentaje que financian, normalmente hasta el 80 % del valor) las decide cada entidad.
+              </p>
 
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 <Button variant="secondary" onClick={() => setMostrarTabla((s) => !s)}>
                   {mostrarTabla ? "Ocultar amortización" : "Ver amortización"}
                 </Button>
-                <Button variant="outline" asChild>
-                  <a href="/contacto">Quiero asesoramiento gratuito</a>
+                <Button asChild className="bg-black hover:bg-stone-800 text-white">
+                  <Link href="/contacto">¿Te ayudo con tu caso?</Link>
                 </Button>
               </div>
             </CardContent>
@@ -307,8 +306,8 @@ export default function SimuladorHipotecaPage() {
               <h2 className="font-semibold text-lg">¿Cómo calculamos la cuota?</h2>
               <p className="text-sm text-muted-foreground mt-2">
                 Usamos la amortización francesa: cuota = P · r · (1+r)<sup>n</sup> / ((1+r)<sup>n</sup> − 1), donde P es el
-                principal, r el tipo mensual (TIN/12) y n el número de cuotas. La TAE mostrada es orientativa y no
-                incluye comisiones ni seguros.
+                importe de la hipoteca, r el interés mensual (TIN/12) y n el número de cuotas. No incluye comisiones ni
+                seguros que pueda pedir el banco.
               </p>
             </CardContent>
           </Card>

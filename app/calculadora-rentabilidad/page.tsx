@@ -6,7 +6,8 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
-import { ArrowRight, Calculator, TrendingUp } from "lucide-react"
+import Link from "next/link"
+import { Calculator, Info, TrendingUp } from "lucide-react"
 
 type Num = number | ""
 
@@ -23,17 +24,17 @@ export default function RentabilidadPage() {
   const [precio, setPrecio] = useState<Num>(150000)
   const [alquilerMes, setAlquilerMes] = useState<Num>(850)
   const [reforma, setReforma] = useState<Num>(10000)
-  const [gastosCierre, setGastosCierre] = useState<Num>(8000)
+  // Segunda mano en la Comunitat Valenciana: ITP 9 % + notaría, registro y gestoría (~1,5 %) ≈ 10,5 % del precio
+  const [gastosCierre, setGastosCierre] = useState<Num>(15750)
 
   // Gastos anuales fijos (IBI, comunidad, seguro, mantenimiento)
   const [ibi, setIbi] = useState<Num>(350)
   const [comunidad, setComunidad] = useState<Num>(45) // mensual
   const [seguro, setSeguro] = useState<Num>(180)
-  const [mantenimientoPct, setMantenimientoPct] = useState<Num>(5) // % del alquiler anual
-
-  // Vacancia y gestión
-  const [vacanciaPct, setVacanciaPct] = useState<Num>(5)
-  const [gestionPct, setGestionPct] = useState<Num>(0)
+  // En euros y meses (sin porcentajes), para que nadie tenga que hacer cuentas
+  const [mantenimiento, setMantenimiento] = useState<Num>(500) // € al año
+  const [mesesVacio, setMesesVacio] = useState<Num>(0.5) // meses al año sin inquilino
+  const [gestionMes, setGestionMes] = useState<Num>(0) // € al mes por gestionar el alquiler
 
   // Hipoteca
   const [usaHipoteca, setUsaHipoteca] = useState(true)
@@ -43,16 +44,16 @@ export default function RentabilidadPage() {
 
   const resultado = useMemo(() => {
     if (
-      precio === "" ||
+      precio === "" || precio <= 0 ||
       alquilerMes === "" ||
       reforma === "" ||
       gastosCierre === "" ||
       ibi === "" ||
       comunidad === "" ||
       seguro === "" ||
-      mantenimientoPct === "" ||
-      vacanciaPct === "" ||
-      gestionPct === "" ||
+      mantenimiento === "" ||
+      mesesVacio === "" ||
+      gestionMes === "" ||
       interes === "" ||
       plazoAnios === "" ||
       entradaPct === ""
@@ -74,9 +75,9 @@ export default function RentabilidadPage() {
 
     // Ingresos y gastos
     const ingresosAnuales = alquilerMes * 12
-    const vacancia = ingresosAnuales * (vacanciaPct / 100)
-    const gestion = ingresosAnuales * (gestionPct / 100)
-    const mantenimiento = ingresosAnuales * (mantenimientoPct / 100)
+    const meses = Math.min(Math.max(mesesVacio, 0), 11)
+    const vacancia = alquilerMes * meses // alquiler que se deja de cobrar
+    const gestion = gestionMes * 12
     const comunidadAnual = comunidad * 12
 
     const gastosOperativos = vacancia + gestion + mantenimiento + comunidadAnual + ibi + seguro
@@ -86,22 +87,19 @@ export default function RentabilidadPage() {
     const cashFlowAnual = noi - (usaHipoteca ? deudaAnual : 0)
     const cashFlowMensual = cashFlowAnual / 12
 
-    // Métricas
-    const rentabilidadBruta = ingresosAnuales / precio * 100
-    const rentabilidadNeta = noi / precio * 100
+    // Métricas: sobre el coste total de la compra (precio + impuestos y gastos + reforma),
+    // que es lo que de verdad cuesta poner el piso en alquiler
+    const costeTotal = precio + gastosCierre + reforma
+    const rentabilidadBruta = ingresosAnuales / costeTotal * 100
+    const rentabilidadNeta = noi / costeTotal * 100
     const cashOnCash = inversionInicial > 0 ? (cashFlowAnual / inversionInicial) * 100 : 0
 
-    // Punto de equilibrio: alquiler mínimo para cash-flow 0
-    // CF = (alquiler*12 - gastosOperativosVar(alquiler) - gastosFijos) - deuda
-    // gastosOperativosVar = (vacancia% + gestion% + mantenimiento%) * alquiler*12
-    const varPct = (vacanciaPct + gestionPct + mantenimientoPct) / 100
-    const gastosFijosAnuales = comunidadAnual + ibi + seguro
-    const alquilerAnualBreakEven = (usaHipoteca ? deudaAnual : 0) + gastosFijosAnuales
-      // dividir por (1 - varPct) para "desaplicar" el porcentaje variable
-      / (1 - varPct || 1)
-    const alquilerMensualBreakEven = alquilerAnualBreakEven / 12
+    // Alquiler mínimo para no perder dinero: alquiler × (12 − meses vacío) = gastos fijos + hipoteca
+    const gastosFijosAnuales = comunidadAnual + ibi + seguro + mantenimiento + gestion
+    const alquilerMensualBreakEven = ((usaHipoteca ? deudaAnual : 0) + gastosFijosAnuales) / (12 - meses)
 
     return {
+      costeTotal,
       inversionInicial,
       cuotaHipotecaMes,
       ingresosAnuales,
@@ -117,15 +115,15 @@ export default function RentabilidadPage() {
     }
   }, [
     precio, alquilerMes, reforma, gastosCierre,
-    ibi, comunidad, seguro, mantenimientoPct,
-    vacanciaPct, gestionPct, usaHipoteca,
+    ibi, comunidad, seguro, mantenimiento,
+    mesesVacio, gestionMes, usaHipoteca,
     entradaPct, interes, plazoAnios
   ])
 
   const reset = () => {
-    setPrecio(150000); setAlquilerMes(850); setReforma(10000); setGastosCierre(8000)
-    setIbi(350); setComunidad(45); setSeguro(180); setMantenimientoPct(5)
-    setVacanciaPct(5); setGestionPct(0)
+    setPrecio(150000); setAlquilerMes(850); setReforma(10000); setGastosCierre(15750)
+    setIbi(350); setComunidad(45); setSeguro(180); setMantenimiento(500)
+    setMesesVacio(0.5); setGestionMes(0)
     setUsaHipoteca(true); setEntradaPct(20); setInteres(3.5); setPlazoAnios(30)
   }
 
@@ -139,7 +137,7 @@ export default function RentabilidadPage() {
         Calcula la rentabilidad de tu inversión
       </h1>
       <p className="text-muted-foreground mt-3 text-base md:text-lg max-w-2xl mx-auto">
-        Conoce tu rentabilidad bruta, neta y cash-flow estimado con opción de hipoteca y gastos reales.
+        Descubre cuánto rinde un piso en alquiler y cuánto dinero te quedaría cada mes, con o sin hipoteca.
       </p>
     </section>
 
@@ -163,8 +161,12 @@ export default function RentabilidadPage() {
                 <Input inputMode="decimal" value={reforma} onChange={(e)=>setReforma(toNum(e.target.value))} />
               </div>
               <div>
-                <Label>Gastos de cierre / impuestos (€)</Label>
+                <Label>Impuestos y gastos de compra (€)</Label>
                 <Input inputMode="decimal" value={gastosCierre} onChange={(e)=>setGastosCierre(toNum(e.target.value))} />
+                <p className="mt-1 text-xs text-stone-500">
+                  Segunda mano en la Comunitat Valenciana: ITP del 9 % más notaría, registro y gestoría (aprox. 10,5 % del precio).
+                  {precio !== "" && precio > 0 && <> Para este precio, unos {fmt.format(precio * 0.105)}.</>}
+                </p>
               </div>
             </section>
 
@@ -187,16 +189,19 @@ export default function RentabilidadPage() {
               </div>
               <div className="grid sm:grid-cols-3 gap-4 mt-4">
                 <div>
-                  <Label>Mantenimiento (% de alquiler)</Label>
-                  <Input inputMode="decimal" value={mantenimientoPct} onChange={(e)=>setMantenimientoPct(toNum(e.target.value))}/>
+                  <Label>Reparaciones al año (€)</Label>
+                  <Input inputMode="decimal" value={mantenimiento} onChange={(e)=>setMantenimiento(toNum(e.target.value))}/>
+                  <p className="mt-1 text-xs text-stone-500">Lo que calculas gastar en arreglos cada año.</p>
                 </div>
                 <div>
-                  <Label>Vacancia (% del año)</Label>
-                  <Input inputMode="decimal" value={vacanciaPct} onChange={(e)=>setVacanciaPct(toNum(e.target.value))}/>
+                  <Label>Meses al año sin inquilino</Label>
+                  <Input inputMode="decimal" value={mesesVacio} onChange={(e)=>setMesesVacio(toNum(e.target.value))}/>
+                  <p className="mt-1 text-xs text-stone-500">Por ejemplo, 0,5 = medio mes entre un inquilino y otro.</p>
                 </div>
                 <div>
-                  <Label>Gestión (% del alquiler)</Label>
-                  <Input inputMode="decimal" value={gestionPct} onChange={(e)=>setGestionPct(toNum(e.target.value))}/>
+                  <Label>Gestión del alquiler (€ al mes)</Label>
+                  <Input inputMode="decimal" value={gestionMes} onChange={(e)=>setGestionMes(toNum(e.target.value))}/>
+                  <p className="mt-1 text-xs text-stone-500">Si lo gestionas tú, déjalo en 0.</p>
                 </div>
               </div>
             </section>
@@ -219,7 +224,7 @@ export default function RentabilidadPage() {
                   </div>
                 </div>
                 <div>
-                  <Label>Interés TIN (% anual)</Label>
+                  <Label>Interés de la hipoteca (% anual)</Label>
                   <Input inputMode="decimal" value={interes} onChange={(e)=>setInteres(toNum(e.target.value))}/>
                 </div>
                 <div>
@@ -247,18 +252,19 @@ export default function RentabilidadPage() {
               <p className="text-sm text-stone-600">Rellena todos los campos para ver los cálculos.</p>
             ) : (
               <div className="space-y-4">
-                <Stat label="Inversión inicial" value={fmt.format(resultado.inversionInicial)} />
+                <Stat label="Coste total de la compra" value={fmt.format(resultado.costeTotal)} />
+                <Stat label="Dinero que pones tú" value={fmt.format(resultado.inversionInicial)} />
                 <hr className="border-black/[0.08]" />
                 <Stat label="Rentabilidad bruta" value={`${fmt2.format(resultado.rentabilidadBruta)} %`} />
-                <Stat label="Rentabilidad neta (NOI/Precio)" value={`${fmt2.format(resultado.rentabilidadNeta)} %`} />
+                <Stat label="Rentabilidad neta (tras gastos)" value={`${fmt2.format(resultado.rentabilidadNeta)} %`} />
                 <hr className="border-black/[0.08]" />
-                <Stat label="Cash-flow mensual" value={fmt.format(resultado.cashFlowMensual)} emphasis />
-                <Stat label="Cash-on-Cash (año 1)" value={`${fmt2.format(resultado.cashOnCash)} %`} />
+                <Stat label="Te queda al mes" value={fmt.format(resultado.cashFlowMensual)} emphasis />
+                <Stat label="Rentabilidad sobre tu dinero (año 1)" value={`${fmt2.format(resultado.cashOnCash)} %`} />
                 {resultado.cuotaHipotecaMes > 0 && (
                   <Stat label="Cuota hipoteca (mes)" value={fmt.format(resultado.cuotaHipotecaMes)} />
                 )}
                 <hr className="border-black/[0.08]" />
-                <Stat label="Alquiler de equilibrio (mes)" value={fmt.format(resultado.alquilerMensualBreakEven)} />
+                <Stat label="Alquiler mínimo para no perder dinero" value={fmt.format(resultado.alquilerMensualBreakEven)} />
               </div>
             )}
 
@@ -268,10 +274,19 @@ export default function RentabilidadPage() {
                 <p className="font-medium">Consejo rápido</p>
               </div>
               <p className="text-sm text-stone-700">
-                Sube <span className="font-medium">entrada</span> o baja <span className="font-medium">vacancia/gestión</span> para mejorar el
-                <span className="font-medium"> cash-flow</span>. La <span className="font-medium">rentabilidad neta</span> compara mejor activos que la bruta.
+                Para comparar pisos, fíjate en la <span className="font-medium">rentabilidad neta</span>: ya descuenta impuestos de compra,
+                reforma y gastos. Si "te queda al mes" sale en negativo, tendrías que poner dinero cada mes.
               </p>
             </div>
+
+            <p className="flex items-start gap-2 text-xs text-stone-500">
+              <Info className="mt-[2px] h-4 w-4 shrink-0" aria-hidden="true" />
+              Cálculo orientativo. No incluye los impuestos sobre las rentas del alquiler ni garantiza resultados.
+            </p>
+
+            <Button asChild className="w-full bg-black hover:bg-stone-800 text-white">
+              <Link href="/contacto">¿Te ayudo a encontrar un piso para invertir?</Link>
+            </Button>
           </CardContent>
         </Card>
       </div>

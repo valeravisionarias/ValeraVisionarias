@@ -12,6 +12,8 @@ const nextConfig = {
   async redirects() {
     return [
       { source: '/dosier', destination: PROMOCION_PATH, permanent: false },
+      // La calculadora de inversión (ahorro genérico, sin relación con viviendas) se retiró
+      { source: '/calculadora-inversion', destination: '/calculadora-rentabilidad', permanent: true },
       { source: `${PROMOCION_PATH}/index.html`, destination: PROMOCION_PATH, permanent: true },
     ]
   },

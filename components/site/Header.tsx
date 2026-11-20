@@ -20,7 +20,6 @@ const navLinks = [
 const calculatorLinks = [
   { href: "/simulador-hipoteca", label: "Hipoteca" },
   { href: "/calculadora-rentabilidad", label: "Rentabilidad" },
-  { href: "/calculadora-inversion", label: "Inversión" },
 ]
 
 const linkBase =

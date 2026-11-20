@@ -13,7 +13,6 @@ const staticRoutes: Array<{ path: string; priority: number; changeFrequency: "da
   { path: "/nosotros", priority: 0.6, changeFrequency: "yearly" },
   { path: "/simulador-hipoteca", priority: 0.5, changeFrequency: "yearly" },
   { path: "/calculadora-rentabilidad", priority: 0.5, changeFrequency: "yearly" },
-  { path: "/calculadora-inversion", priority: 0.5, changeFrequency: "yearly" },
   { path: "/colabora", priority: 0.4, changeFrequency: "yearly" },
   { path: "/privacidad", priority: 0.1, changeFrequency: "yearly" },
   { path: "/cookies", priority: 0.1, changeFrequency: "yearly" },
