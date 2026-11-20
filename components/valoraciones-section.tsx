@@ -7,8 +7,9 @@ export default function ValoracionesSection() {
   return (
     <section className="py-16 sm:py-20 md:py-24 lg:py-32">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
-        <div className="grid gap-12 lg:grid-cols-[1fr_minmax(0,30rem)] lg:gap-16 lg:items-start">
-          <div>
+        {/* En móvil: titular, formulario y pasos (en ese orden). En escritorio: formulario a la derecha. */}
+        <div className="grid gap-10 lg:grid-cols-[1fr_minmax(0,30rem)] lg:gap-x-16 lg:items-start">
+          <div className="lg:col-start-1 lg:row-start-1">
             <p className="text-xs tracking-[0.3em] uppercase text-stone-500 mb-3 sm:mb-4">Valoración gratuita</p>
             <h1 className="page-title text-black mb-4 sm:mb-6 text-balance">
               ¿Cuánto vale tu vivienda en San Vicente del Raspeig?
@@ -17,8 +18,14 @@ export default function ValoracionesSection() {
               Déjanos solo cómo contactarte y, si quieres, la zona y el tipo de vivienda. Te prepararemos una
               valoración orientativa según el mercado de la zona, sin coste y sin compromiso.
             </p>
+          </div>
 
-            <ol className="mt-8 grid gap-4 max-w-xl">
+          <div className="lg:col-start-2 lg:row-start-1 lg:row-span-2">
+            <ContactForm source="pagina-valoraciones" />
+          </div>
+
+          <div className="lg:col-start-1 lg:row-start-2">
+            <ol className="grid gap-4 max-w-xl">
               {[
                 { title: "Nos dejas tu contacto", text: "Solo un teléfono o email. La zona y el tipo de vivienda, si quieres." },
                 { title: "Analizamos el mercado", text: "Revisamos viviendas comparables en tu zona y su situación." },
@@ -38,8 +45,6 @@ export default function ValoracionesSection() {
               La valoración es orientativa y no sustituye a una tasación oficial.
             </p>
           </div>
-
-          <ContactForm source="pagina-valoraciones" />
         </div>
       </div>
     </section>
