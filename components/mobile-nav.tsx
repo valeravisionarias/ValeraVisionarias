@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { Fragment, useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -52,6 +52,40 @@ export default function MobileNav() {
   }, [isOpen])
 
   useEffect(closeMenu, [pathname])
+
+  const calculadoras = (
+            <li key="calculadoras">
+              <button
+                type="button"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                aria-expanded={isDropdownOpen}
+                aria-controls="mobile-calculadoras"
+                className="w-full flex justify-between items-center py-3 px-4 text-[1.05rem] text-stone-700 rounded-lg hover:bg-stone-100 hover:text-black transition-colors"
+              >
+                Calculadoras
+                <ChevronDown
+                  aria-hidden="true"
+                  className={`w-5 h-5 transition-transform duration-300 ${isDropdownOpen ? "rotate-180" : ""}`}
+                />
+              </button>
+
+              {isDropdownOpen && (
+                <ul id="mobile-calculadoras" className="ml-4 mt-1 space-y-1 border-l border-stone-200 pl-4">
+                  {calculatorItems.map((item) => (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        onClick={closeMenu}
+                        className="block py-2 text-base text-stone-600 hover:text-black transition-colors"
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+  )
 
   return (
     <>
@@ -105,7 +139,7 @@ export default function MobileNav() {
               const active = item.href === pathname
               // El dosier es un HTML estático: enlace normal, sin navegación del router
               const NavLink = item.staticPage ? "a" : Link
-              return (
+              const link = (
                 <li key={item.href}>
                   <NavLink
                     href={item.href}
@@ -119,39 +153,17 @@ export default function MobileNav() {
                   </NavLink>
                 </li>
               )
+              // Calculadoras justo después de "Vender mi vivienda", para que se vean sin bajar en pantallas cortas
+              return item.href === "/valoraciones" ? (
+                <Fragment key={item.href}>
+                  {link}
+                  {calculadoras}
+                </Fragment>
+              ) : (
+                link
+              )
             })}
 
-            <li>
-              <button
-                type="button"
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                aria-expanded={isDropdownOpen}
-                aria-controls="mobile-calculadoras"
-                className="w-full flex justify-between items-center py-3 px-4 text-[1.05rem] text-stone-700 rounded-lg hover:bg-stone-100 hover:text-black transition-colors"
-              >
-                Calculadoras
-                <ChevronDown
-                  aria-hidden="true"
-                  className={`w-5 h-5 transition-transform duration-300 ${isDropdownOpen ? "rotate-180" : ""}`}
-                />
-              </button>
-
-              {isDropdownOpen && (
-                <ul id="mobile-calculadoras" className="ml-4 mt-1 space-y-1 border-l border-stone-200 pl-4">
-                  {calculatorItems.map((item) => (
-                    <li key={item.href}>
-                      <Link
-                        href={item.href}
-                        onClick={closeMenu}
-                        className="block py-2 text-base text-stone-600 hover:text-black transition-colors"
-                      >
-                        {item.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
           </ul>
 
           <div className="mt-8 space-y-3 px-2">

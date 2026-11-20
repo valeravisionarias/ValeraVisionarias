@@ -31,11 +31,10 @@ export default function RentabilidadPage() {
   const [ibi, setIbi] = useState<Num>(350)
   const [comunidad, setComunidad] = useState<Num>(45) // mensual
   const [seguro, setSeguro] = useState<Num>(180)
-  const [mantenimientoPct, setMantenimientoPct] = useState<Num>(5) // % del alquiler anual
-
-  // Vacancia y gestión
-  const [vacanciaPct, setVacanciaPct] = useState<Num>(5)
-  const [gestionPct, setGestionPct] = useState<Num>(0)
+  // En euros y meses (sin porcentajes), para que nadie tenga que hacer cuentas
+  const [mantenimiento, setMantenimiento] = useState<Num>(500) // € al año
+  const [mesesVacio, setMesesVacio] = useState<Num>(0.5) // meses al año sin inquilino
+  const [gestionMes, setGestionMes] = useState<Num>(0) // € al mes por gestionar el alquiler
 
   // Hipoteca
   const [usaHipoteca, setUsaHipoteca] = useState(true)
@@ -52,9 +51,9 @@ export default function RentabilidadPage() {
       ibi === "" ||
       comunidad === "" ||
       seguro === "" ||
-      mantenimientoPct === "" ||
-      vacanciaPct === "" ||
-      gestionPct === "" ||
+      mantenimiento === "" ||
+      mesesVacio === "" ||
+      gestionMes === "" ||
       interes === "" ||
       plazoAnios === "" ||
       entradaPct === ""
@@ -76,9 +75,9 @@ export default function RentabilidadPage() {
 
     // Ingresos y gastos
     const ingresosAnuales = alquilerMes * 12
-    const vacancia = ingresosAnuales * (vacanciaPct / 100)
-    const gestion = ingresosAnuales * (gestionPct / 100)
-    const mantenimiento = ingresosAnuales * (mantenimientoPct / 100)
+    const meses = Math.min(Math.max(mesesVacio, 0), 11)
+    const vacancia = alquilerMes * meses // alquiler que se deja de cobrar
+    const gestion = gestionMes * 12
     const comunidadAnual = comunidad * 12
 
     const gastosOperativos = vacancia + gestion + mantenimiento + comunidadAnual + ibi + seguro
@@ -95,15 +94,9 @@ export default function RentabilidadPage() {
     const rentabilidadNeta = noi / costeTotal * 100
     const cashOnCash = inversionInicial > 0 ? (cashFlowAnual / inversionInicial) * 100 : 0
 
-    // Punto de equilibrio: alquiler mínimo para cash-flow 0
-    // CF = (alquiler*12 - gastosOperativosVar(alquiler) - gastosFijos) - deuda
-    // gastosOperativosVar = (vacancia% + gestion% + mantenimiento%) * alquiler*12
-    const varPct = (vacanciaPct + gestionPct + mantenimientoPct) / 100
-    const gastosFijosAnuales = comunidadAnual + ibi + seguro
-    // Ojo: hay que dividir la suma completa (antes solo se dividían los gastos fijos)
-    const alquilerAnualBreakEven =
-      ((usaHipoteca ? deudaAnual : 0) + gastosFijosAnuales) / (1 - varPct > 0 ? 1 - varPct : 1)
-    const alquilerMensualBreakEven = alquilerAnualBreakEven / 12
+    // Alquiler mínimo para no perder dinero: alquiler × (12 − meses vacío) = gastos fijos + hipoteca
+    const gastosFijosAnuales = comunidadAnual + ibi + seguro + mantenimiento + gestion
+    const alquilerMensualBreakEven = ((usaHipoteca ? deudaAnual : 0) + gastosFijosAnuales) / (12 - meses)
 
     return {
       costeTotal,
@@ -122,15 +115,15 @@ export default function RentabilidadPage() {
     }
   }, [
     precio, alquilerMes, reforma, gastosCierre,
-    ibi, comunidad, seguro, mantenimientoPct,
-    vacanciaPct, gestionPct, usaHipoteca,
+    ibi, comunidad, seguro, mantenimiento,
+    mesesVacio, gestionMes, usaHipoteca,
     entradaPct, interes, plazoAnios
   ])
 
   const reset = () => {
     setPrecio(150000); setAlquilerMes(850); setReforma(10000); setGastosCierre(15750)
-    setIbi(350); setComunidad(45); setSeguro(180); setMantenimientoPct(5)
-    setVacanciaPct(5); setGestionPct(0)
+    setIbi(350); setComunidad(45); setSeguro(180); setMantenimiento(500)
+    setMesesVacio(0.5); setGestionMes(0)
     setUsaHipoteca(true); setEntradaPct(20); setInteres(3.5); setPlazoAnios(30)
   }
 
@@ -196,16 +189,19 @@ export default function RentabilidadPage() {
               </div>
               <div className="grid sm:grid-cols-3 gap-4 mt-4">
                 <div>
-                  <Label>Reparaciones y mantenimiento (% del alquiler)</Label>
-                  <Input inputMode="decimal" value={mantenimientoPct} onChange={(e)=>setMantenimientoPct(toNum(e.target.value))}/>
+                  <Label>Reparaciones al año (€)</Label>
+                  <Input inputMode="decimal" value={mantenimiento} onChange={(e)=>setMantenimiento(toNum(e.target.value))}/>
+                  <p className="mt-1 text-xs text-stone-500">Lo que calculas gastar en arreglos cada año.</p>
                 </div>
                 <div>
-                  <Label>Tiempo sin inquilino (% del año)</Label>
-                  <Input inputMode="decimal" value={vacanciaPct} onChange={(e)=>setVacanciaPct(toNum(e.target.value))}/>
+                  <Label>Meses al año sin inquilino</Label>
+                  <Input inputMode="decimal" value={mesesVacio} onChange={(e)=>setMesesVacio(toNum(e.target.value))}/>
+                  <p className="mt-1 text-xs text-stone-500">Por ejemplo, 0,5 = medio mes entre un inquilino y otro.</p>
                 </div>
                 <div>
-                  <Label>Gestión del alquiler (% del alquiler)</Label>
-                  <Input inputMode="decimal" value={gestionPct} onChange={(e)=>setGestionPct(toNum(e.target.value))}/>
+                  <Label>Gestión del alquiler (€ al mes)</Label>
+                  <Input inputMode="decimal" value={gestionMes} onChange={(e)=>setGestionMes(toNum(e.target.value))}/>
+                  <p className="mt-1 text-xs text-stone-500">Si lo gestionas tú, déjalo en 0.</p>
                 </div>
               </div>
             </section>
