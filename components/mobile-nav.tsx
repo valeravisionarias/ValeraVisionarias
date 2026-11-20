@@ -183,7 +183,7 @@ export default function MobileNav() {
           </div>
         </nav>
 
-        <div className="space-y-2 border-t border-stone-200 bg-stone-50 p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+        <div className="space-y-2 border-t border-stone-200 bg-stone-50 p-6 pb-[calc(4.5rem+env(safe-area-inset-bottom))]">
           <p className="text-xs uppercase tracking-wide text-stone-500">Contacto directo</p>
           <a href={contactInfo.phoneHref} className="flex items-center gap-2 text-base font-semibold text-black hover:underline">
             <Phone className="h-4 w-4" aria-hidden="true" />
