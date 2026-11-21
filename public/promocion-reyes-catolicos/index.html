@@ -375,6 +375,12 @@ h1,h2,h3,h4{font-weight:300;letter-spacing:-.01em}
 .band.in p{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.band img{transform:none!important}.band p{opacity:1;transform:none}}
 /* forma de pago */
+.aval{margin-top:2px;background:#fff;border:1px solid var(--line);border-top:0;padding:20px 30px;font-size:15.5px;line-height:1.6;color:var(--mute)}
+.aval b{color:var(--ink);font-weight:500;margin-right:4px}
+.ps p b{color:var(--ink);font-weight:500}
+.ps .k small{display:block;margin:6px 0 0;white-space:nowrap}
+.prw.sub2 span{font-weight:500}
+.prw.sub2{background:var(--soft,#f6f5f3)}
 .ps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;margin-top:44px;background:var(--line);border:1px solid var(--line)}
 .ps>div{background:#fff;padding:34px 30px 32px;position:relative}
 .ps .n{font-size:11px;letter-spacing:.16em;color:var(--sand);font-weight:500}
@@ -488,22 +494,24 @@ h1,h2,h3,h4{font-weight:300;letter-spacing:-.01em}
 <p class="note">Además, la cubierta común cuenta con dos piscinas, duchas y solárium. Superficies según el cuadro de terrazas privadas del proyecto.</p></div></section>
 
 <section id="pago"><div class="wrap"><div class="rv"><div class="eyebrow">Forma de pago</div><h2>Un proceso sencillo, por etapas</h2>
-<p class="lead">Sin grandes desembolsos de golpe: la mayor parte del pago se hace en la entrega de llaves, con tu hipoteca. Precios sin IVA; el IVA de la vivienda nueva es del 10 %.</p></div>
-<div class="ps rv"><div><div class="n">01</div><h3>Reserva</h3><div class="k">3.000 €</div><p>Reservas tu vivienda. Este importe se descuenta del precio final y su IVA se abona en el contrato.</p></div>
-<div><div class="n">02</div><h3>Contrato</h3><div class="k">20.000 €<small>+ IVA</small></div><p>Al firmar el contrato completas 20.000 € más el IVA de esos 20.000 €. Como ya entregaste la reserva, pagas 19.000 €.</p></div>
-<div><div class="n">03</div><h3>Durante la obra</h3><div class="k">Hasta el 20 %<small>+ IVA</small></div><p>Hasta completar el 20 % del precio, descontados los 20.000 € ya entregados, en 24 cuotas mensuales.</p></div>
-<div><div class="n">04</div><h3>Entrega de llaves</h3><div class="k">80 %<small>+ IVA</small></div><p>En la firma de la escritura, subrogándote al préstamo de la promotora o con tu propia hipoteca, lo que mejor te venga.</p></div></div>
+<p class="lead">El pago se hace en cuatro pasos. Los precios de las viviendas no incluyen IVA (10 %). En cada paso verás si la cifra lo lleva o no.</p></div>
+<div class="ps rv"><div><div class="n">01</div><h3>Reserva</h3><div class="k">3.000 €<small>su IVA se paga en el contrato</small></div><p>Para reservar tu vivienda. Se descuentan del precio y su IVA (300 €) se paga en el contrato.</p></div>
+<div><div class="n">02</div><h3>Contrato</h3><div class="k">19.000 €<small>IVA incluido</small></div><p>Son 17.000 € + 2.000 € de IVA. Con la reserva, completas los primeros 20.000 € del precio más su IVA.</p></div>
+<div><div class="n">03</div><h3>Durante la obra</h3><div class="k">20&nbsp;%<small>+ IVA</small></div><p>Completas el 20 % del precio, más su IVA. Lo que falta después del contrato se paga en 24 cuotas mensuales.</p></div>
+<div><div class="n">04</div><h3>Entrega de llaves</h3><div class="k">80 %<small>+ IVA</small></div><p>El resto, al firmar la escritura y recibir las llaves: con tu hipoteca o subrogándote al préstamo de la promotora.</p></div></div>
+<div class="aval rv"><b>Tu dinero, protegido.</b> Todo lo que pagues antes de la escritura está garantizado con aval bancario, como exige la ley.</div>
 <div class="pc rv"><div class="pch"><div class="eyebrow">Calculadora de pagos</div><h3>Calcula el plan de pagos de cada vivienda</h3>
 <label class="lb" for="pysel">Elige la vivienda</label><div class="psel"><select id="pysel"></select></div>
 <p class="who" id="pys"></p>
 <div class="acts"><a class="pill fill" id="pywa" href="#contacto" target="_blank" rel="noopener">Consultar mi caso</a><a class="pill" href="#viviendas">Ver en el edificio</a></div></div>
-<div class="ptb" aria-live="polite"><div class="ph"><span></span><span>Importe</span><span>IVA (10 %)</span><span>Total</span></div>
-<div class="prw"><span>Reserva<small>Se descuenta del precio</small></span><span data-l="Importe" id="r1a"></span><span data-l="IVA" id="r1b"></span><span data-l="Total" id="r1c"></span></div>
-<div class="prw"><span>Contrato<small>Hasta 20.000 € + IVA de los 20.000 €</small></span><span data-l="Importe" id="r6a"></span><span data-l="IVA" id="r6b"></span><span data-l="Total" id="r6c"></span></div>
-<div class="prw hl"><span>Cuota mensual<small>24 cuotas durante la obra</small></span><span data-l="Importe" id="r2a"></span><span data-l="IVA" id="r2b"></span><span data-l="Total" id="r2c"></span></div>
-<div class="prw"><span>Total de las cuotas<small>20 % del precio menos los 20.000 € entregados</small></span><span data-l="Importe" id="r3a"></span><span data-l="IVA" id="r3b"></span><span data-l="Total" id="r3c"></span></div>
-<div class="prw"><span>Escritura y llaves<small>80 % del precio</small></span><span data-l="Importe" id="r4a"></span><span data-l="IVA" id="r4b"></span><span data-l="Total" id="r4c"></span></div>
-<div class="prw tt2"><span>Total de la vivienda</span><span data-l="Importe" id="r5a"></span><span data-l="IVA" id="r5b"></span><span data-l="Total" id="r5c"></span></div></div></div>
+<div class="ptb" aria-live="polite"><div class="ph"><span></span><span>Sin IVA</span><span>IVA (10 %)</span><span>Total con IVA</span></div>
+<div class="prw"><span>Reserva<small>Se descuenta del precio. Su IVA (300 €) se paga en el contrato</small></span><span data-l="Sin IVA" id="r1a"></span><span data-l="IVA" id="r1b"></span><span data-l="Total con IVA" id="r1c"></span></div>
+<div class="prw"><span>Contrato<small>20.000 € menos los 3.000 € de la reserva, + 2.000 € de IVA (10 % de los 20.000 €)</small></span><span data-l="Sin IVA" id="r6a"></span><span data-l="IVA" id="r6b"></span><span data-l="Total con IVA" id="r6c"></span></div>
+<div class="prw hl"><span>Cuota mensual<small id="r2s">24 cuotas al mes durante la obra</small></span><span data-l="Sin IVA" id="r2a"></span><span data-l="IVA" id="r2b"></span><span data-l="Total con IVA" id="r2c"></span></div>
+<div class="prw"><span>Total de las 24 cuotas<small>20 % del precio menos los 20.000 € ya entregados</small></span><span data-l="Sin IVA" id="r3a"></span><span data-l="IVA" id="r3b"></span><span data-l="Total con IVA" id="r3c"></span></div>
+<div class="prw sub2"><span>Pagado antes de la escritura<small>Reserva + contrato + cuotas = 20 % del precio + su IVA</small></span><span data-l="Sin IVA" id="r7a"></span><span data-l="IVA" id="r7b"></span><span data-l="Total con IVA" id="r7c"></span></div>
+<div class="prw"><span>Escritura y llaves<small>80 % del precio + su IVA</small></span><span data-l="Sin IVA" id="r4a"></span><span data-l="IVA" id="r4b"></span><span data-l="Total con IVA" id="r4c"></span></div>
+<div class="prw tt2"><span>Total de la vivienda<small>Precio + IVA</small></span><span data-l="Sin IVA" id="r5a"></span><span data-l="IVA" id="r5b"></span><span data-l="Total con IVA" id="r5c"></span></div></div></div>
 <script>(function(){
 /* Calculadora de pagos. Todo se calcula en céntimos para evitar errores de redondeo.
    Reglas: reserva 3.000 € (su IVA se paga en el contrato); contrato hasta 20.000 € + IVA de los 20.000 €;
@@ -517,11 +525,16 @@ function dor(n){return n==1?'1 dorm.':n+' dorm.'}
 function calc(u){
  var P=u.p*100000,obra=Math.max(0,P*20/100-CON),cu=Math.round(obra/NC),esc=P*80/100;
  var r={r:[RES,0],k:[CON-RES,iva(CON)],c:[cu,Math.round(iva(obra)/NC)],o:[obra,iva(obra)],e:[esc,iva(esc)]};
- r.t=[RES+(CON-RES)+obra+esc,iva(CON)+iva(obra)+iva(esc)];return r}
+ r.t=[RES+(CON-RES)+obra+esc,iva(CON)+iva(obra)+iva(esc)];
+ r.a=[RES+(CON-RES)+obra,iva(CON)+iva(obra)];
+ /* La última cuota absorbe la diferencia de céntimos del redondeo */
+ r.u=[obra-cu*(NC-1),iva(obra)-r.c[1]*(NC-1)];return r}
 window.payCalc=calc;
 function show(u){
- var r=calc(u),rows=[['r1',r.r],['r6',r.k],['r2',r.c],['r3',r.o],['r4',r.e],['r5',r.t]];
+ var r=calc(u),rows=[['r1',r.r],['r6',r.k],['r2',r.c],['r3',r.o],['r7',r.a],['r4',r.e],['r5',r.t]];
  rows.forEach(function(x){g(x[0]+'a').textContent=f(x[1][0]);g(x[0]+'b').textContent=x[0]=='r1'?'En el contrato':f(x[1][1]);g(x[0]+'c').textContent=f(x[1][0]+x[1][1])});
+ var ul=r.u[0]+r.u[1],cm=r.c[0]+r.c[1];
+ g('r2s').textContent=ul==cm?'24 cuotas iguales al mes durante la obra':'23 cuotas de '+f(cm)+' y una última de '+f(ul)+' (ajuste de céntimos), todas con IVA incluido';
  g('pys').textContent='Vivienda '+u.l+' · '+FN[u.f]+' · '+(u.d==1?'1 dormitorio':u.d+' dormitorios')+' · '+m2(u.u)+' m² útiles · '+f(u.p*100000)+' + IVA';
  g('pysel').value=u.id;
  g('pywa').href='https://wa.me/34617314584?text='+encodeURIComponent('Hola Laura, me gustaría que me explicaras el plan de pagos de la vivienda '+u.l+' de la '+FN[u.f].toLowerCase()+' de la promoción de Reyes Católicos con Joaquín Blume.')}
@@ -530,7 +543,7 @@ window.payList=function(U){LIST=U;var sel=g('pysel'),h='';
  sel.innerHTML=h;sel.onchange=function(){for(var i=0;i<LIST.length;i++)if(LIST[i].id==sel.value){show(LIST[i]);break}}};
 window.payU=show;
 })();</script>
-<p class="note">Cálculo orientativo con IVA del 10 % aplicado a cada pago, excepto a la reserva. Las cuotas se redondean al céntimo. Las condiciones definitivas son las que figuren en el contrato de compraventa.</p></div></section>
+<p class="note">Cálculo orientativo. Se aplica el IVA de la vivienda nueva (10 %); si el tipo cambiara por ley, se aplicaría el vigente en cada pago. El IVA de la reserva (300 €) se paga en el contrato, dentro de los 2.000 € de IVA. Las cuotas se redondean al céntimo y la diferencia se ajusta en la última. No incluye los gastos de compra (notaría, registro, impuesto de actos jurídicos documentados) ni los de la hipoteca. La financiación depende de la aprobación del banco, que normalmente financia el precio, no el IVA ni los gastos. Las condiciones definitivas son las que figuren en el contrato de compraventa.</p></div></section>
 
 <section class="band lt" aria-label="Espacios abiertos y luminosos, con salón, comedor y cocina conectados."><img data-from="g-n5" alt="" style="object-position:60% 50%"><div class="bt"><div class="wrap"><div class="eyebrow">Interiores</div><p>Espacios abiertos y luminosos, con salón, comedor y cocina conectados.</p></div></div></section>
 <section id="calidades"><div class="wrap"><div class="rv"><div class="eyebrow">Memoria de calidades</div><h2>Lo que hay dentro de cada vivienda</h2>
@@ -658,7 +671,7 @@ function pick(id,scroll){
  var st=[[dsc(u.d).split(' ')[0],u.d==1?'dormitorio':'dormitorios'],[fmt(u.u,2)+' m²','Superficie útil'],[fmt(u.c,2)+' m²','Construida'],[fmt(u.t,2)+' m²','Con zonas comunes']];
  if(u.o)st.push([fmt(u.o,2)+' m²',u.f==0?'Patio privado':'Terraza privada']);
  $('#dst').innerHTML=st.map(function(s){return '<div><b>'+s[0]+'</b><small>'+s[1]+'</small></div>'}).join('');
- $('#dp').innerHTML=eur(u.p)+' €<small>+ IVA · Garaje y trastero incluidos</small>';if(window.payU)window.payU(u);
+ $('#dp').innerHTML=eur(u.p)+' €<small>+ IVA (10 %) = '+String(Math.round(u.p*1100)).replace(/\B(?=(\d{3})+(?!\d))/g,'.')+' € con IVA · Garaje y trastero incluidos</small>';if(window.payU)window.payU(u);
  var same=U.filter(function(x){return x.l==u.l&&x.id!=u.id&&x.pg!==undefined&&((x.f>0&&u.f>0&&x.pg==u.pg)||(u.f==0&&0))});
  var ss=same.map(function(x){return '<button data-id="'+x.id+'">'+FN[x.f]+'</button>'}).join('');
  $('#dsame').innerHTML=ss?'Misma distribución en:'+ss:'';
