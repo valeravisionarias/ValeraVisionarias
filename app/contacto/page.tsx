@@ -59,13 +59,13 @@ export default function ContactoPage() {
                 Comencemos tu proyecto inmobiliario
               </h2>
               <p className="mb-8 text-stone-700">
-                Completa el formulario y te responderemos en menos de 24 horas. Tambien puedes llamarnos, escribirnos
+                Completa el formulario y te responderemos en menos de 24 horas. También puedes llamarnos, escribirnos
                 por email o contactar por WhatsApp.
               </p>
 
               <ul className="space-y-4 text-sm text-stone-800">
                 <li>
-                  <strong>Telefono:</strong>{" "}
+                  <strong>Teléfono:</strong>{" "}
                   <a className="underline" href={contactInfo.phoneHref}>
                     {contactInfo.phone}
                   </a>
@@ -77,7 +77,7 @@ export default function ContactoPage() {
                   </a>
                 </li>
                 <li>
-                  <strong>Direccion:</strong> {contactInfo.fullAddress}
+                  <strong>Dirección:</strong> {contactInfo.fullAddress}
                 </li>
                 <li>
                   <strong>WhatsApp:</strong>{" "}
@@ -107,7 +107,7 @@ export default function ContactoPage() {
                   <li>Lunes a viernes: 9:00-20:00</li>
                   <li>Sábado: 9:00-14:00</li>
                   <li>Domingo: Cerrado</li>
-                  <li>Atención personal solo con cita previa</li>
+                  <li>Te atendemos con cita previa, para dedicarte todo el tiempo que necesites</li>
                 </ul>
               </div>
 
