@@ -21,7 +21,7 @@ export const contactInfo = {
   googleRating: "4,3",
   googleReviewCount: "Más de 20",
   hoursSummary: "Lunes a viernes de 9:00 a 20:00 y sábados de 9:00 a 14:00.",
-  appointmentNote: "Atención personal solo con cita previa.",
+  appointmentNote: "Te atendemos con cita previa, para dedicarte todo el tiempo que necesites.",
   socialLinks: {
     instagram: "https://www.instagram.com/lvaleravisionarias?igsh=emp1N2VyZXg1cTN1&utm_source=qr",
     tiktok: "https://www.tiktok.com/@lvaleravisionarias?_r=1&_t=ZN-94lbuEN3tT8",

@@ -73,7 +73,7 @@ export default function Footer({ year }: { year: number }) {
               <li><Link href="/valoraciones" className="transition-colors hover:text-white">Valoración gratuita</Link></li>
               <li><Link href="/propiedades" className="transition-colors hover:text-white">Comprar piso en San Vicente</Link></li>
               <li><a href={PROMOCION_PATH} className="transition-colors hover:text-white">Obra nueva: Residencial Reyes Católicos</a></li>
-              <li><Link href="/propiedades" className="transition-colors hover:text-white">Alquiler cerca Universidad</Link></li>
+              <li><Link href="/propiedades" className="transition-colors hover:text-white">Alquiler cerca de la Universidad</Link></li>
               <li><Link href="/simulador-hipoteca" className="transition-colors hover:text-white">Simulador de hipoteca</Link></li>
               <li><Link href="/calculadora-rentabilidad" className="transition-colors hover:text-white">Calculadora de rentabilidad</Link></li>
               <li><Link href="/colabora" className="transition-colors hover:text-white">Colabora con nosotros</Link></li>
