@@ -60,7 +60,7 @@ export default function ValeraVisionariasLandingClient({
 
             <div className="mt-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
               <p className="max-w-xl text-lg leading-[1.33] text-white/85 sm:text-[23px] sm:leading-[1.25] sm:tracking-[-0.02em]">
-                Descubre cuánto puede valer tu vivienda y qué estrategia seguir para vender sin malvender ni perder
+                Descubre cuánto puede valer tu vivienda y qué estrategia seguir para vender al mejor precio y sin perder
                 meses.
               </p>
 
