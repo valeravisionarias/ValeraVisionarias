@@ -3,6 +3,10 @@ import PropertyForm from "@/components/admin/PropertyForm";
 import { createServiceClient } from "@/lib/supabase/service";
 import ImageGalleryManager from "@/components/admin/ImageGalleryManager";
 
+// Siempre datos frescos: si no, el panel podía mostrar una versión antigua del inmueble
+// (y al guardar se sobrescribían los cambios) y la galería salía vacía.
+export const dynamic = "force-dynamic";
+
 export default async function EditarPropiedadPage({ params }: { params: { id: string } }) {
   const supabase = createServiceClient();
   const { data: property } = await supabase
