@@ -58,7 +58,7 @@ export default function PropiedadesClient({
       {/* HERO — coherente con la landing */}
       <section
         aria-label="Cabecera de Propiedades"
-        className="relative min-h-[56svh] flex items-end bg-black pt-20"
+        className="relative isolate min-h-[56svh] flex items-end bg-black pt-20"
       >
         {/* Fondo */}
         <div className="absolute inset-0 -z-10">
@@ -66,13 +66,13 @@ export default function PropiedadesClient({
             src="/images/hero-architecture.jpg"
             alt="Arquitectura moderna en San Vicente del Raspeig"
             fill
-            className="object-cover"
+            className="object-cover grayscale opacity-45"
             priority={false}
             sizes="100vw"
             quality={85}
           />
-          {/* Overlay para legibilidad */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/35 to-black/10" />
+          {/* Velo negro translúcido: el edificio se intuye detrás sin restar legibilidad */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/35 to-black/85" />
         </div>
 
         {/* Contenido */}
