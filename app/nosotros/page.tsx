@@ -192,7 +192,7 @@ export default function NosotrosPage() {
                 ¿Listo para dar el siguiente paso?
               </h2>
               <p className="text-lg text-stone-700 mb-8">
-                Estamos aquí para ayudarte: responde tus dudas, analizar tu propiedad o planear tu próxima inversión.
+                Estamos aquí para ayudarte: resolver tus dudas, analizar tu propiedad o planificar tu próxima inversión.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/contacto">
