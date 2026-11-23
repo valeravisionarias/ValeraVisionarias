@@ -122,7 +122,7 @@ export default function PropertySearchSection() {
                       >
                         <option value="">Todas las zonas</option>
                         <option value="centro">San Vicente Centro</option>
-                        <option value="universidad">Cerca Universidad</option>
+                        <option value="universidad">Cerca de la Universidad</option>
                         <option value="villafranqueza">Villafranqueza</option>
                         <option value="raspeig-norte">Raspeig Norte</option>
                       </select>
